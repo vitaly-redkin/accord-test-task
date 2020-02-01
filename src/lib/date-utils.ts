@@ -40,6 +40,14 @@ const MIN_YEAR = 1753
 export const MIN_MONTH = composeMonth(MIN_YEAR, 1)
 
 /**
+ * truncates the time portion of the given date.
+ * @param date date to truncate
+ */
+export function truncateDate(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+/**
  * Get the month (of the Month type) from the given date.
  * @param date date to het the month from
  */
@@ -159,7 +167,7 @@ export function isToday(date: Date): boolean {
  * Decomposes the given month to year and month (January=1) numbers.
  * @param month month to decompose
  */
-function decomposeMonth(month: Month): { y: number; m: number } {
+export function decomposeMonth(month: Month): { y: number; m: number } {
   return {
     y: parseInt(month.substr(0, 4)),
     m: parseInt(month.substr(4, 2))

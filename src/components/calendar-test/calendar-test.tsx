@@ -27,10 +27,12 @@ const CalendarTest: FC<{}> = ({ className }): JSX.Element => {
   const render = (): JSX.Element => {
     return (
       <div className={className}>
-        <div className={classNames(rcn('calendar-div'))}>
+        <div>
           <Calendar value={date} onChange={changeDate} />
-          <hr />
-          Current date is {date ? date.toDateString() : 'not set'}
+          <div className={classNames(rcn('current-date-div'))}>
+            Current date is{' '}
+            <strong>{date ? date.toDateString() : 'not set'}</strong>
+          </div>
         </div>
       </div>
     )
@@ -42,11 +44,12 @@ const CalendarTest: FC<{}> = ({ className }): JSX.Element => {
 const StyledCalendarTest = styled(CalendarTest)`
   width: 100%;
   height: 100vh;
-  display: table;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
-  .${rcn('calendar-div')} {
-    display: table-cell;
-    vertical-align: middle;
+  .${rcn('current-date-div')} {
     text-align: center;
   }
 `
