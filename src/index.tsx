@@ -1,14 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { GlobalStyle } from './global-style'
-import { Spinner } from './components/shared/spinner'
+import { CalendarTest } from './components/calendar-test/calendar-test'
 
 console.info(`⚛️ ${React.version}`)
 
 const App = () => (
   <>
     <GlobalStyle />
-    <Spinner />
+    <CalendarTest />
   </>
 )
 
