@@ -11,16 +11,22 @@ import {
   MonthShift,
   getMonthName,
   isDateValidToSelect,
-  MIN_MONTH
+  MIN_MONTH,
+  isToday
 } from '../../lib/date-utils'
 import { range } from '../../lib/common-utils'
 
 const rcn = randomClassName()
 
 /**
- * Interface for the calendar component properties.
+ * Headers for the week days.
  */
-interface CalendarProps {
+const weekDayNames: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
+
+/**
+ * Type for the calendar component properties.
+ */
+type CalendarProps = {
   /**
    * Calendar current date (undefined means nothing is selected yet).
    */
@@ -30,6 +36,16 @@ interface CalendarProps {
    * @param newValue selected value to set
    */
   onChange(newValue: Date): void
+}
+
+/**
+ * Type for the month day properties.
+ */
+type MonthDayProps = {
+  date: Date
+  day: number
+  isToday: boolean
+  isSelectable: boolean
 }
 
 /**
@@ -45,10 +61,24 @@ const Calendar: FC<CalendarProps> = ({
 }): JSX.Element => {
   const date: Date = value ?? new Date()
   const month: Month = getMonthFromDate(date)
+  const now: Date = new Date()
+  const today: Date = new Date(now.getFullYear(), now.getMonth(), now.getDate())
 
   const [currentMonth, setCurrentMonth] = React.useState<Month>(month)
 
-  const monthDays: MonthDays = getMonthDays(currentMonth)
+  const monthDays: MonthDayProps[] = React.useMemo((): MonthDayProps[] => {
+    const isCurrentMonth: boolean = getMonthFromDate(today) === currentMonth
+    const md: MonthDays = getMonthDays(currentMonth)
+
+    return md.map(
+      (date: Date): MonthDayProps => ({
+        date: date,
+        day: date.getDate(),
+        isToday: isCurrentMonth && isToday(date),
+        isSelectable: isDateValidToSelect(date)
+      })
+    )
+  }, [currentMonth, today])
 
   /**
    * Shift the current month back and forth.
@@ -115,24 +145,27 @@ const Calendar: FC<CalendarProps> = ({
     )
   }
 
+  /**
+   * Render calendar date.
+   */
   const renderDates = (): JSX.Element => {
     return (
       <>
         {range(monthDays.length / 7).map((weekNo) => (
           <div key={weekNo} className={classNames(rcn('week-div'))}>
             {range(7).map((weekDay) => {
-              const date: Date = monthDays[weekNo * 7 + weekDay]
-              const day: number = date.getDate()
-              const selectable: boolean = isDateValidToSelect(date)
+              const md: MonthDayProps = monthDays[weekNo * 7 + weekDay]
               return (
                 <div key={weekDay} className={classNames(rcn('date-div'))}>
                   <a
                     href="#"
                     onClick={
-                      selectable ? (e) => selectDate(e, date) : undefined
+                      md.isSelectable
+                        ? (e) => selectDate(e, md.date)
+                        : undefined
                     }
                   >
-                    {day}
+                    {md.day}
                   </a>
                 </div>
               )
@@ -161,7 +194,6 @@ const Calendar: FC<CalendarProps> = ({
 
 const StyledCalendar = styled(Calendar)`
   .${rcn('month-div')} {
-    width: 100%;
   }
 
   .${rcn('prev-next-icon')} {
@@ -184,10 +216,4 @@ const StyledCalendar = styled(Calendar)`
     align-self: center;
   }
 `
-
-/**
- * Header for the wek days.
- */
-const weekDayNames: string[] = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
-
 export { StyledCalendar as Calendar }

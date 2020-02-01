@@ -65,13 +65,11 @@ export function getMonthDays(month: Month): MonthDays {
 
   const firstDay: Date = new Date(y, m - 1, 1)
   let firstDoW: number = firstDay.getDay()
-  // Make Sunday 7th day instead of 0th one
   if (firstDoW === 0) {
+    // Make Sunday 7th day instead of 0th one
     firstDoW = 7
-  }
-  // Check for the special case when this is February,
-  // Monday is the first day of the month and the 28th is the last one
-  if (m === 2 && firstDoW === 1 && lastDay.getDate() === 28) {
+  } else if (firstDoW === 1) {
+    // Check for the special case when Monday is the first day of the month
     firstDoW = 8
   }
   // Add days from the previous month at the beginning
