@@ -40,7 +40,7 @@ const MIN_YEAR = 1753
 export const MIN_MONTH = composeMonth(MIN_YEAR, 1)
 
 /**
- * truncates the time portion of the given date.
+ * Truncates the time portion of the given date.
  * @param date date to truncate
  */
 export function truncateDate(date: Date): Date {
@@ -49,7 +49,7 @@ export function truncateDate(date: Date): Date {
 
 /**
  * Get the month (of the Month type) from the given date.
- * @param date date to het the month from
+ * @param date date to get the month from
  */
 export function getMonthFromDate(date: Date): Month {
   const y: number = date.getFullYear()

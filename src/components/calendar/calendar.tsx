@@ -47,10 +47,15 @@ type CalendarProps = {
  * Type for the month day properties.
  */
 type MonthDayProps = {
+  /** The date to select */
   date: Date
+  /** Number of the day in month to show */
   day: number
+  /** true if the date is to be shown as a today */
   isToday: boolean
+  /** true if the date belongs to teh month other than the currently selected in the calendar */
   belongsToOtherMonth: boolean
+  /** true if the date can be selected */
   isSelectable: boolean
 }
 
@@ -89,7 +94,7 @@ const Calendar: FC<CalendarProps> = ({
     )
   }, [currentMonth, today])
 
-  // Set the current month by updated componet value property
+  // Set the current month by updated component value property
   React.useEffect(() => {
     setCurrentMonth(month)
   }, [month])
@@ -115,6 +120,8 @@ const Calendar: FC<CalendarProps> = ({
 
   /**
    * Goes to the next month.
+   * Prevents the event default actions and propagation.
+   * @param e event to handle
    */
   const goForth = React.useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -128,7 +135,7 @@ const Calendar: FC<CalendarProps> = ({
   /**
    * Selects the given date preventing the event default actions and propagation.
    * @param e event to handle
-   * @param date datet to select
+   * @param date date to select
    */
   const selectDate = (
     e: React.MouseEvent<HTMLAnchorElement>,
